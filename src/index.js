@@ -11,7 +11,7 @@ dotenv.config({
 });
 
 function resetAtMidnight() {
-	console.log("\x1b[32m Posting again on 12:00PM \x1b[0m");
+	console.log("\x1b[32mPosting again on 12:00PM\x1b[0m");
 	const now = new Date();
 	const night = new Date(
 		now.getFullYear(),
@@ -52,7 +52,7 @@ async function post() {
 	config.day++;
 
 	if (currentPage === instagramURL) {
-		console.log("\x1b[31m Account logged out, logging back in... \x1b[0m");
+		console.log("\x1b[31mAccount logged out, logging back in...\x1b[0m");
 
 		await page.goto("https://www.instagram.com/accounts/login/");
 
@@ -70,7 +70,7 @@ async function post() {
 		await page.waitForNavigation({
 			waitUntil: "networkidle0",
 		});
-		console.log("\x1b[32m Logged in! \x1b[0m");
+		console.log("\x1b[32mLogged in!\x1b[0m");
 	}
 
 	await delay(config.dealyMS);
@@ -81,16 +81,16 @@ async function post() {
 			timeout: 10000,
 		});
 		const notNow = await page.$x("//button[contains(text(),'Not Now')]");
-		console.log("\x1b[32m Clicking Not Now button \x1b[0m");
+		console.log("\x1b[32mClicking Not Now button\x1b[0m");
 		await notNow[0].click();
 	} catch (err) {
-		console.log("\x1b[33m Not Now button doesn't exist \x1b[0m");
+		console.log("\x1b[33mNot Now button doesn't exist\x1b[0m");
 	}
 
 	page.waitForSelector('svg[aria-label="New post"]');
 	page.click('svg[aria-label="New post"]');
 
-	console.log("\x1b[32m Waiting for the file inputs \x1b[0m");
+	console.log("\x1b[32mWaiting for the file inputs\x1b[0m");
 
 	await page.waitForSelector("input[type='file']");
 
@@ -101,11 +101,11 @@ async function post() {
 		await fileChooser.accept([`../posts/${config.post}.mp4`]);
 		await delay(config.dealyMS);
 	} catch (err) {
-		console.log("\x1b[33m Could not use file picker \x1b[0m");
+		console.log("\x1b[33mCould not use file picker\x1b[0m");
 		try {
 			await page.click("[aria-label='New Post']");
 		} catch (err) {
-			console.log("\x1b[31m Error caught \x1b[0m");
+			console.log("\x1b[33mError caught\x1b[0m");
 		}
 	}
 	await input.uploadFile(`../posts/${config.post}.mp4`);
@@ -118,37 +118,37 @@ async function post() {
 			timeout: 10000,
 		});
 		const ok = await page.$x("//button[contains(text(),'OK')]");
-		console.log("\x1b[32m Clicking OK button \x1b[0m");
+		console.log("\x1b[32mClicking OK button\x1b[0m");
 		await ok[0].click();
 	} catch (err) {
-		console.log("\x1b[33m OK button doesn't exist \x1b[0m");
+		console.log("\x1b[33mOK button doesn't exist\x1b[0m");
 	}
 
 	await delay(config.delayMS);
 
-	console.log("\x1b[32m Clicking next button \x1b[0m");
+	console.log("\x1b[32mClicking next button\x1b[0m");
 
 	let next = await page.$x("//div[contains(text(),'Next')]");
 	await next[0].click();
 
 	await delay(config.dealyMS);
 
-	console.log("\x1b[32m Clicking next button \x1b[0m");
+	console.log("\x1b[32mClicking next button\x1b[0m");
 
 	next = await page.$x("//div[contains(text(),'Next')]");
 	await next[0].click();
 
-	console.log("\x1b[32m Writing caption \x1b[0m");
+	console.log("\x1b[32mWriting caption\x1b[0m");
 
 	await page.click('div[aria-label="Write a caption..."]');
 	await page.keyboard.type(`Day ${config.day}`, { delay: 25 });
 
-	console.log("\x1b[32m Clicking share \x1b[0m");
+	console.log("\x1b[32mClicking share\x1b[0m");
 
 	const share = await page.$x("//div[contains(text(),'Share')]");
 	await share[0].click();
 
-	console.log("\x1b[32m Posting... \x1b[0m");
+	console.log("\x1b[32mPosting...\x1b[0m");
 
 	try {
 		await page.waitForXPath(
@@ -156,16 +156,16 @@ async function post() {
 			{ visible: true, timeout: 1800000 }
 		);
 
-		console.log("Saving config changes...");
+		console.log("\x1b[32mSaving config changes...\x1b[0m");
 		await fs.writeFile(
 			"../config/config.json",
 			JSON.stringify(config),
 			"utf8"
 		);
 
-		console.log("\x1b[32m All done! \x1b[0m");
+		console.log("\x1b[32mAll done!\x1b[0m");
 	} catch (err) {
-		console.log(`\x1b[31m Error caught: ${err} \x1b[0m`);
+		console.log(`\x1b[31mError caught: ${err}\x1b[0m`);
 	}
 
 	browser.close();
