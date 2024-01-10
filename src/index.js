@@ -166,6 +166,7 @@ async function post() {
 		console.log("\x1b[32mAll done!\x1b[0m");
 	} catch (err) {
 		console.log(`\x1b[31mError caught: ${err}\x1b[0m`);
+		resetAtMidnight();
 	}
 
 	browser.close();
