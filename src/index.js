@@ -37,6 +37,7 @@ async function post() {
 	puppeteer.use(StealthPlugin());
 	const browser = await puppeteer.launch({
 		userDataDir: "../config/user_data",
+		headless: "new",
 	});
 
 	const page = await browser.newPage();
@@ -44,12 +45,11 @@ async function post() {
 	await page.goto(instagramURL);
 	const currentPage = await page.evaluate(() => document.location.href);
 
-	if (config.post > 8) {
-		config.post = 0;
-	} else {
-		config.post++;
-	}
+	config.post++;
+	if (config.post > 37) config.post = 1;
 	config.day++;
+
+	console.log(config.day, config.post);
 
 	if (currentPage === instagramURL) {
 		console.log("\x1b[31mAccount logged out, logging back in...\x1b[0m");
