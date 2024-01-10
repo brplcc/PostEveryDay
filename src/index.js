@@ -36,8 +36,8 @@ function delay(timeout) {
 async function post() {
 	puppeteer.use(StealthPlugin());
 	const browser = await puppeteer.launch({
-		userDataDir: "../config/user_data",
 		headless: "new",
+		userDataDir: "../config/user_data",
 	});
 
 	const page = await browser.newPage();
@@ -48,8 +48,6 @@ async function post() {
 	config.post++;
 	if (config.post > 37) config.post = 1;
 	config.day++;
-
-	console.log(config.day, config.post);
 
 	if (currentPage === instagramURL) {
 		console.log("\x1b[31mAccount logged out, logging back in...\x1b[0m");
@@ -150,6 +148,11 @@ async function post() {
 
 	console.log("\x1b[32mPosting...\x1b[0m");
 
+	await page.waitForNavigation({
+		waitUntil: "domcontentloaded",
+		timeout: 1800000,
+	});
+
 	try {
 		await page.waitForXPath(
 			"//span[contains(text(), 'Your reel has been shared.')]",
@@ -165,13 +168,12 @@ async function post() {
 
 		console.log("\x1b[32mAll done!\x1b[0m");
 	} catch (err) {
-		console.log(`\x1b[31mError caught: ${err}\x1b[0m`);
+		console.log(`\x1b[31m${err}\x1b[0m`);
 		resetAtMidnight();
 	}
 
 	browser.close();
-
-	resetAtMidnight();
+	post();
 }
 
 console.clear();
