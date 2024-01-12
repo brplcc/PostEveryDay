@@ -25,7 +25,6 @@ function resetAtMidnight() {
 
 	setTimeout(() => {
 		post();
-		resetAtMidnight();
 	}, msToMidnight);
 }
 
@@ -37,6 +36,7 @@ async function post() {
 	puppeteer.use(StealthPlugin());
 	const browser = await puppeteer.launch({
 		headless: "new",
+		protocolTimeout: 240000,
 		userDataDir: "../config/user_data",
 	});
 
@@ -148,10 +148,7 @@ async function post() {
 
 	console.log("\x1b[32mPosting...\x1b[0m");
 
-	await page.waitForNavigation({
-		waitUntil: "domcontentloaded",
-		timeout: 1800000,
-	});
+	delay(10000);
 
 	try {
 		await page.waitForXPath(
@@ -169,11 +166,10 @@ async function post() {
 		console.log("\x1b[32mAll done!\x1b[0m");
 	} catch (err) {
 		console.log(`\x1b[31m${err}\x1b[0m`);
-		resetAtMidnight();
 	}
 
 	browser.close();
-	post();
+	resetAtMidnight();
 }
 
 console.clear();
